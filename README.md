@@ -2,7 +2,7 @@ Note: This is a sample project for my blog on medium which can be found here htt
 
 ## Get Started
 1. Clone this repository
-2. Run npm install to inside its root folder.
+2. Run npm install inside its root folder.
 3. run nodemone index.js (assuming nodemon npm package is already installed in your systems)
 
 ## Client side for this project
