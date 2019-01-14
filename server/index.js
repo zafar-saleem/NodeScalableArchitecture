@@ -6,6 +6,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieParser = require('cookie-parser'); 
+const cors = require('cors');
 
 module.exports = function() {
   let server = express(),
@@ -22,6 +23,7 @@ module.exports = function() {
     server.set('viewDir', config.viewDir);
 
     // Returns middleware that parses json
+    server.use(cors());
     server.use(bodyParser.json());
     server.use(bodyParser.urlencoded({ extended: false }));
     server.use(cookieParser());
