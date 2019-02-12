@@ -29,7 +29,10 @@ module.exports = function() {
     server.use(cookieParser());
     server.use(logger('dev'));
     server.use(passport.initialize());
-    mongoose.connect(db.database, { useNewUrlParser: true });
+    mongoose.connect(db.database, {
+      useNewUrlParser: true,
+      useCreateIndex: true
+    });
     require('../configs/passport')(passport);
 
     server.use('/uploads', express.static('uploads'));
