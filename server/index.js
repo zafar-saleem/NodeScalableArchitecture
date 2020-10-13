@@ -31,7 +31,8 @@ module.exports = function() {
     server.use(passport.initialize());
     mongoose.connect(db.database, {
       useNewUrlParser: true,
-      useCreateIndex: true
+      useCreateIndex: true,
+      useUnifiedTopology: true
     });
     require('../configs/passport')(passport);
 
