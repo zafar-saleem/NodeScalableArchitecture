@@ -1,45 +1,53 @@
 'use strict';
 
-const express = require('express');
 const User = require('../../models/User');
-
-const httpResponses = {
-  onValidationError: {
-    success: false,
-    message: 'Please enter email and password.'
-  },
-  onUserSaveError: {
-    success: false,
-    message: 'That email address already exists.'
-  },
-  onUserSaveSuccess: {
-    success: true,
-    message: 'Successfully created new user.'
-  }
-}
 
 // Register new users
 function registerUser(request, response) {
   let { email, password } = request.body;
 
   if (!email || !password) {
-    response.json(httpResponses.onValidationError);
+    response.json({
+      success: false,
+      message: 'Please enter email and password.'
+    });
   } else {
-    let newUser = new User({
-      email: email,
-      password: password
-    });
-
-    // Attempt to save the user
-    newUser.save(error => {
-      if (error) {
-        return response.json(httpResponses.onUserSaveError);
-      }
-      response.json(httpResponses.onUserSaveSuccess);
-    });
+    User.findOne({ email: email })
+      .then(user => {
+        if (user) {
+          response.json({
+            success: false,
+            message: 'User with that email already exist.',
+          });
+        } else {
+          new User({
+            email, password,
+          })
+          .save()
+          .then(doc => {
+            if (doc) {
+              response.json({
+                success: true,
+                message: 'Register user successfully.',
+              });
+            } else {
+              response.json({
+                success: false,
+                message: 'Error registering user.',
+              });
+            }
+          })
+          .catch(error => {
+            response.json(error);
+          });
+        }
+      })
+      .catch(error => {
+        response.json(error);
+      });
   }
 }
 
 module.exports = {
-  registerUser: registerUser
+  registerUser: registerUser,
 };

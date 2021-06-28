@@ -1,24 +1,9 @@
 'use strict';
 
-const express = require('express');
-const apiRoutes = express.Router();
-
 const jwt = require('jsonwebtoken');
-const passport = require('passport');
 const db = require('../../../configs/db');
 
 const User = require('../../models/User');
-
-const httpResponse = {
-  onUserNotFound: {
-    success: false,
-    message: 'User not found.'
-  },
-  onAuthenticationFail: {
-    success: false,
-    message: 'Passwords did not match.'
-  }
-}
 
 function loginUser(request, response) { 
   let { email, password } = request.body;
@@ -29,7 +14,10 @@ function loginUser(request, response) {
     if (error) throw error;
 
     if (!user) {
-      return response.send(httpResponse.onUserNotFound);
+      return response.send({
+        success: false,
+        message: 'User not found.',
+      });
     }
 
     // Check if password matches
@@ -42,11 +30,14 @@ function loginUser(request, response) {
         return response.json({ success: true, token: 'JWT ' + token });
       }
 
-      response.send(httpResponse.onAuthenticationFail);
+      response.send({
+        success: false,
+        message: 'Passwords did not match.',
+      });
     });
   });
 };
 
 module.exports = {
-  loginUser: loginUser
+  loginUser: loginUser,
 };
